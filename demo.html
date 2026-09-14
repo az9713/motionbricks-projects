@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Watch the real local G1 MotionBricks Project 1 demo, then learn what its generated skeleton and target controls mean.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'">
+<title>MotionBricks Project 1 — recorded G1 demo</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1722;--panel:#142332;--line:#365064;--ink:#e7eef2;--muted:#afbec8;--mint:#7ce3cb;--gold:#efc27b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 0%,#203848 0,#0d1722 34rem);color:var(--ink);font:17px/1.7 "Segoe UI",Arial,sans-serif}a{color:var(--mint);text-underline-offset:3px}a:hover{color:#b8f7e9}a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.wrap{max-width:1180px;margin:auto;padding:0 clamp(1rem,4vw,3rem)}nav{padding:1.3rem 0;border-bottom:1px solid var(--line);display:flex;gap:1rem;flex-wrap:wrap}nav a{text-decoration:none}h1,h2{font-family:"Bahnschrift","Arial Narrow",Arial,sans-serif;line-height:1.15}h1{font-size:clamp(2.7rem,6vw,5rem);max-width:17ch;margin:.5rem 0}h2{font-size:1.8rem;margin:.5rem 0}.eyebrow{color:var(--gold);font:.75rem "Cascadia Code",Consolas,monospace;letter-spacing:.12em;text-transform:uppercase}.hero{padding:3rem 0 1rem}.lead{font-size:1.18rem;color:#d4e3e8;max-width:72ch}.video-box{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#05090d}video{display:block;width:100%;height:auto;aspect-ratio:1600/724}.caption{color:var(--muted);font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:2rem 0}.card{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:1.2rem}ul{padding-left:1.3rem}li{margin:.45rem 0}footer{border-top:1px solid var(--line);padding:2rem 0 4rem;color:var(--muted);font-size:.9rem}@media(max-width:650px){body{font-size:16px}.grid{grid-template-columns:1fr}.hero{padding:2rem 0}}@media print{:root{color-scheme:light;--bg:#fff;--panel:#fff;--line:#aaa;--ink:#111;--muted:#333;--mint:#055b4a;--gold:#6d4700}body{background:#fff;color:#111;font-size:11pt}video{display:none}.hero{padding:1rem 0}.card{break-inside:avoid}a{color:#055b4a}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav aria-label="Main navigation"><a href="index.html">Project overview</a><a href="MOTIONBRICKS-PROJECT1-CONTROL-FIELD-GUIDE.html">Control field guide</a><a href="MOTIONBRICKS-PROJECT1-DEVELOPMENT-JOURNEY.html">Development journey</a><a href="https://github.com/localai-org/motion-bricks.cpp">Original repository</a></nav>
+<main>
+<header class="hero"><div class="eyebrow">Recorded local run · 2 min 14 sec · silent</div><h1>Watch the model, then question it.</h1><p class="lead">This is a compressed recording of Project 1's actual browser viewer. The mint G1 skeleton is generated motion. The warm ghost is a target constraint. Style selections and movement commands alter the planner's inputs; the target slider and overlay are inspection tools.</p></header>
+<div class="video-box"><video controls playsinline preload="metadata" poster="poster.jpg" aria-label="Project 1 MotionBricks G1 demo recording"><source src="demo.mp4" type="video/mp4"><p>Your browser cannot play this video. <a href="demo.mp4">Download the MP4</a>.</p></video></div>
+<p class="caption">H.264, 1600 × 724, 30 fps, about 6.7 MB. The audio track was omitted because the interface demonstration requires no sound. <a href="demo.mp4">Open the MP4 directly</a>.</p>
+<div class="grid"><section class="card"><h2>Look for three separate signals</h2><ul><li><strong>Command:</strong> which style or movement button is active?</li><li><strong>Target:</strong> how does the warm ghost's pose or path change?</li><li><strong>Result:</strong> how does the mint skeleton follow or depart from that target?</li></ul><p>When a change feels delayed, inspect the panel's Status and underrun readout before attributing it to the model.</p></section><section class="card"><h2>What the clip cannot prove</h2><p>A short recording cannot establish sustained 50 Hz streaming, physics stability, GPU speed, or Unreal readiness. The live demo on this laptop used CPU inference and a kinematic G1 skeleton. The <a href="MOTIONBRICKS-PROJECT1-CONTROL-FIELD-GUIDE.html">control field guide</a> turns this clip into six experiments; the <a href="MOTIONBRICKS-PROJECT1-DEVELOPMENT-JOURNEY.html">build journey</a> gives the measured limits.</p></section></div>
+</main>
+<footer>Independent Project 1 recording · Original implementation: <a href="https://github.com/localai-org/motion-bricks.cpp">localai-org/motion-bricks.cpp</a> · Inspiration: <a href="https://www.youtube.com/watch?v=lj-xPo7ueGA">Stefan 3D AI's video</a></footer>
+</div>
+</body>
+</html>
