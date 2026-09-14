@@ -1,8 +1,8 @@
 # MotionBricks projects
 
-An independent, evidence-first collection of small projects for learning motion generation on a Windows laptop. This repository is the **home for the whole series**, not just the first G1 experiment. Project 1 is complete and documented; Projects 2–4 are proposed experiments, not published results.
+An independent, evidence-first collection of projects for learning motion generation on a Windows laptop. The series now includes the working G1 lab, a measured CPU motion sequence, an atlas spanning all 15 installed styles, controlled target-pose interventions, and a long-form interactive Wind Tunnel. The visual exhibits replay **actual model output**; GitHub Pages does not run the neural model.
 
-**[Open the project site](https://az9713.github.io/motionbricks-projects/)** · **[Watch Project 1](https://az9713.github.io/motionbricks-projects/demo.html)** · **[Project 1 build and measurements](PROJECT-1.md)**
+**[Open the project site](https://az9713.github.io/motionbricks-projects/)** · **[Enter the Motion Wind Tunnel](https://az9713.github.io/motionbricks-projects/wind-tunnel/)** · **[Project 1 build and measurements](PROJECT-1.md)**
 
 [![Watch the Project 1 G1 motion demonstration](https://az9713.github.io/motionbricks-projects/poster.jpg)](https://az9713.github.io/motionbricks-projects/demo.html)
 
@@ -31,11 +31,18 @@ The rendered skeleton is a **generated motion reference**, not a simulated physi
 | Project | Status | Question | Main output |
 | --- | --- | --- | --- |
 | **1 · G1 motion lab** | **Complete** | Can the released model run on this laptop, and what does each browser control actually do? | Working local CPU demo, [control field guide](https://az9713.github.io/motionbricks-projects/MOTIONBRICKS-PROJECT1-CONTROL-FIELD-GUIDE.html), [development journey](https://az9713.github.io/motionbricks-projects/MOTIONBRICKS-PROJECT1-DEVELOPMENT-JOURNEY.html), [recording](https://az9713.github.io/motionbricks-projects/demo.html), and [detailed project notes](PROJECT-1.md). |
-| **2 · Performance microscope** | Planned | Where does time go between an input and a visible pose? Can Vulkan improve the result within this laptop's 4 GB VRAM? | Repeatable latency traces, CPU/Vulkan comparison, peak VRAM, and a measured answer to “real time.” |
-| **3 · Style atlas** | Planned | How much of a motion change comes from the `.mbstyle` target constraints versus the model's continuation? | Controlled comparisons of the 15 published styles, target windows, trajectories, and joint motion. |
-| **4 · Target-pose lab** | Planned | What happens when we construct or alter G1 target poses directly, beyond the stock keyboard controls? | A small target authoring tool, controlled input/output experiments, and failure-case analysis. |
+| **2 · Motion stopwatch** | Available | How much of a command's delay is inside the planner, and how much elapses before the server schedules it? | [Interactive 59-second CPU capture](https://az9713.github.io/motionbricks-projects/projects/02-performance/) with 12 scheduled commands, native planner durations, and request-to-ack intervals. Browser presentation latency and Vulkan remain unmeasured. |
+| **3 · Style DNA atlas** | Available | How do target ghosts and generated motion change as styles switch in one continuous run? | [Interactive 56.5-second atlas](https://az9713.github.io/motionbricks-projects/projects/03-style-atlas/) covering all 15 installed styles, with observed root speed and pelvis height for each late phase. Context carries across switches; this is not a separately reset causal ranking. |
+| **4 · Target-pose lab** | Available | What changes when the target's lateral root position changes but source poses, target rotations, duration, and seed stay fixed? | [Four genuine stateless inference outputs](https://az9713.github.io/motionbricks-projects/projects/04-target-lab/) alongside the long controller capture. This tests one plausible G1 boundary family, not arbitrary poses or physical feasibility. |
+| **Motion Wind Tunnel** | Available | What did we command, what targets were placed, what motion was generated, and when? | [One uninterrupted 59-second interactive sequence](https://az9713.github.io/motionbricks-projects/wind-tunnel/): walk, stealth, injured gait, 90° turn, side-step, zombie, dance, reverse, crawl, recover, stop. |
 
-Projects 2–4 are an experimental roadmap. Their names, tools, and outputs may change when the first measurements reveal what is feasible. This repository will hold their code, data summaries, guides, and Pages links as they are completed. Each will receive its own project directory; the root README and site remain the series index.
+The four exhibits share one reproducible renderer and preserve the distinction between commands, controller targets, generated poses, and timings. Project 2 and the Wind Tunnel use [`shared/story.json`](shared/story.json): 1,475 sampled G1 poses and 96 real target events over 58.98 simulation seconds. Project 3 uses a separate [`shared/atlas.json`](shared/atlas.json): 1,413 poses over 56.5 seconds. Project 4 additionally uses [`shared/counterfactual.json`](shared/counterfactual.json), generated by the port's public `mb_model_infer` API. Source code, capture scripts, and UI checks live with the exhibits; model weights do not.
+
+### How to read the Wind Tunnel
+
+Press **Pause** before a command switch, predict the target placement, then resume. The cyan skeleton is generated G1 motion; the amber ghost is the latest fourth target pose; the path traces generated root movement. The phase buttons jump to exact scripted changes. Use **Show target ghost** to test whether the animation alone hides what was requested. The Project 2 page reveals timing for the same run; Project 3 gives the complete 15-style transition run; Project 4 lets you compare four actual outputs under changed target positions.
+
+These are bounded experiments. The CPU recordings do not establish sustained game-ready responsiveness, the atlas does not isolate style from inherited context and nominal speed, and a close target endpoint does not prove realistic intermediate motion or balance. The demo's optional SONIC/MuJoCo physics was not part of these captures. A hardware Vulkan comparison needs a usable NVIDIA Vulkan path; this WSL installation exposed the CUDA driver but no NVIDIA Vulkan ICD, so this publication makes no GPU speed or VRAM claim.
 
 ## What Project 1 established
 
@@ -49,8 +56,41 @@ The [control field guide](https://az9713.github.io/motionbricks-projects/MOTIONB
 
 Read [PROJECT-1.md](PROJECT-1.md) for the full reproduction steps. In brief: clone this repository, clone the [original C++ implementation](https://github.com/localai-org/motion-bricks.cpp) into a `motion-bricks.cpp` folder inside it, fetch the released G1 assets through the upstream SHA-256-verifying downloader, and build its CPU library and Go demo in Ubuntu WSL. On Windows, `Start-MotionBricks.cmd` starts the local demo; `Stop-MotionBricks.cmd` stops it. The detailed notes explain the exact checkout studied and how to interpret the benchmark.
 
+## Reproduce and test Projects 2–4
+
+After the Project 1 build, start a **separate** local demo server on port 8081 from the educational repository root inside Ubuntu WSL:
+
+```bash
+bash run-demo.sh 8081
+```
+
+In Windows PowerShell from this repository, use Python with `websockets` to capture a scripted run. Restart the port-8081 demo between recordings so each capture owns a fresh session:
+
+```powershell
+python -m pip install websockets
+python tools/capture_sequence.py --port 8081 --out shared/story.json
+python tools/capture_sequence.py --mode atlas --port 8081 --out shared/atlas.json
+```
+
+Inside Ubuntu WSL, produce Project 4's four target interventions with the already-built native library. The script uses Python's standard `ctypes` library and holds source poses, rotations, seed, and duration fixed:
+
+```bash
+LD_LIBRARY_PATH=motion-bricks.cpp/build/wsl-cpu python3 tools/build_counterfactual.py
+```
+
+For a local static preview and browser checks, run a Python HTTP server from this repository root and use the test script in another terminal:
+
+```powershell
+python -m http.server 8091 --bind 127.0.0.1
+python -m pip install playwright
+python -m playwright install chromium
+python tools/test_exhibits.py --base http://127.0.0.1:8091
+```
+
+The checks validate motion data shapes, finite unit quaternions, distinct counterfactual outputs, all four desktop interfaces, four mobile layouts, phase navigation, scrubbing, playback, target visibility, and rendered-frame changes. The [Three.js modules and their license](shared/THREE-LICENSE.txt) are bundled locally so the public exhibits do not depend on a CDN.
+
 ## Sources and scope
 
-The starting inspiration was Stefan 3D AI's YouTube video, [“Free and Local Real-Time AI Animation - NVIDIA MotionBricks.cpp”](https://www.youtube.com/watch?v=lj-xPo7ueGA). The research is [NVIDIA MotionBricks](https://nvlabs.github.io/motionbricks/). The port, demo, model downloader, and G1 assets come from the [original `motion-bricks.cpp` repository](https://github.com/localai-org/motion-bricks.cpp); Project 1 studied its commit [`2727a456`](https://github.com/localai-org/motion-bricks.cpp/tree/2727a456e0a99baf64476496cd58115fef717944). This series contributes independent Windows/WSL setup notes, measurements, learning guides, launch helpers, and a recording. It does not claim authorship of the research or port.
+The starting inspiration was Stefan 3D AI's YouTube video, [“Free and Local Real-Time AI Animation - NVIDIA MotionBricks.cpp”](https://www.youtube.com/watch?v=lj-xPo7ueGA). The research is [NVIDIA MotionBricks](https://nvlabs.github.io/motionbricks/). The port, demo, model downloader, and G1 assets come from the [original `motion-bricks.cpp` repository](https://github.com/localai-org/motion-bricks.cpp); Project 1 studied its commit [`2727a456`](https://github.com/localai-org/motion-bricks.cpp/tree/2727a456e0a99baf64476496cd58115fef717944). This series contributes independent Windows/WSL setup notes, measurements, learning guides, launch helpers, motion captures, target experiments, and interactive exhibits. It does not claim authorship of the research or port.
 
-Weights, compiled binaries, local logs, the source transcript, and the upstream checkout are not redistributed here. Obtain the implementation and model from upstream under their own terms. Future projects will state their exact upstream versions and hardware so their evidence can be compared fairly.
+Weights, compiled binaries, local logs, the source transcript, and the upstream checkout are not redistributed here. Obtain the implementation and model from upstream under their own terms. The added captures, reproducible scripts, target experiments, and browser exhibits are this series' independent work.
